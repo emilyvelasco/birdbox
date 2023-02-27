@@ -1,4 +1,5 @@
-/* This sketch is heavily based on a demo code from DFRobot,
+/* This sketch is heavily based on a demo code by 
+[Angelo qiao](Angelo.qiao@dfrobot.com) for DFRobot,
 but it replaces the function that plays a new mp3 file after 
 a set period of time with a function that plays a new mp3
 file when triggered by an external sensor, either a PIR, 
@@ -9,10 +10,6 @@ DFPlayer - A Mini MP3 Player For Arduino
  <https://www.dfrobot.com/product-1121.html>
  
  ***************************************************
- This example shows the basic function of library for DFPlayer.
- 
- Created 2016-12-07
- By [Angelo qiao](Angelo.qiao@dfrobot.com)
  
  GNU Lesser General Public License.
  See <http://www.gnu.org/licenses/> for details.
@@ -34,6 +31,7 @@ int pirState = LOW;             // we start, assuming no motion detected
 int val = 0;                    // variable for reading the pin status
 int volumeLevel;
 int gain;
+int birdNumber = 2;
 
 SoftwareSerial mySoftwareSerial(10, 11); // RX, TX
 DFRobotDFPlayerMini myDFPlayer;
@@ -42,6 +40,10 @@ boolean triggered = false;
 
 void setup()
 {
+  delay(250);/*If power is applied to SD player and Arduino at the same time,
+  the Arduino will try to initialize comms with the player before the 
+  player is ready. This short delay provides time for the player to get
+  booted up before comms are attempted*/
   mySoftwareSerial.begin(9600);
   Serial.begin(115200);
   
@@ -60,6 +62,7 @@ void setup()
   Serial.println(F("DFPlayer Mini online."));
   
   myDFPlayer.volume(20);  //Set volume value. From 0 to 30
+  
   myDFPlayer.play(1);  //Play the first mp3
 }
 
@@ -71,10 +74,13 @@ void loop()
   val = digitalRead(inputPin);  // read input value
 
 
+
   if (val == HIGH) { //if the sensor is high
     if (!triggered){ //and not already high
-     myDFPlayer.next();  //Play next mp3 
+     myDFPlayer.play(birdNumber);  //Play another mp3 
       triggered = true;
+      birdNumber = random(1,150); /*pick a random mp3 to play next. Make sure this does not
+      exceed the number of files you have*/
     }
   }else{
     triggered = false;
