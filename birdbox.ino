@@ -79,7 +79,7 @@ void loop()
     if (!triggered){ //and not already high
      myDFPlayer.play(birdNumber);  //Play another mp3 
       triggered = true;
-      birdNumber = random(1,150); /*pick a random mp3 to play next. Make sure this does not
+      birdNumber = random(2,72); /*pick a random mp3 to play next. Make sure this does not
       exceed the number of files you have*/
     }
   }else{
